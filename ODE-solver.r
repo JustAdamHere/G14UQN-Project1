@@ -1,3 +1,6 @@
+# Import correct library.
+library("rODE")
+
 # Problem details.
 parameters <- c(sigma=2.99, beta=0.9, p=0.09, gamma=6.15)
 initial    <- c(S=150, E=32, I=1, R=0, C=1, D=0)
