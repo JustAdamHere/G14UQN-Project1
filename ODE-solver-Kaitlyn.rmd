@@ -1,0 +1,98 @@
+---
+title: 'UQ(A): Solving ODE'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+
+## Solving the 6 ODE's (given random parameters):
+
+library(deSolve)
+
+# function which forms a closed seir model
+closed.seir.model <- function (t, x, params) {
+  ## extract the x variables
+  S <- x[1]
+  E <- x[2]
+  I <- x[3]
+  R <- x[4]
+  C <- x[5]
+  D <- x[6]
+  # extract the parameters
+  beta <- params["beta"]
+  gamma <- params["gamma"]
+  sigma <- params["sigma"]
+  rho <- params["rho"]
+  N <- S+E+I+R
+  # code the model equations
+  dSdt <- -(beta*S*I)/N
+  dEdt <- ((beta*S*I)/N)-(sigma*E)
+  dIdt <- (sigma*E)-(gamma*I)
+  dRdt <- (1-rho)*gamma*I
+  dCdt <- sigma*E
+  dDdt <- rho*gamma*I
+  # combine results into a single vector
+  dxdt <- c(dSdt,dEdt,dIdt,dRdt, dCdt, dDdt)
+  # return result as a list
+  list(dxdt)
+}
+
+# input starting parameters and chosen time frame
+parms <- c(beta=200,gamma=365/20,sigma=0.25,rho=0.1)
+xstart <- c(S=500,E=100,I=1,R=0,C=1,D=0)
+times <- seq(from=0,to=5,by=1/365)
+
+library(tidyverse)
+
+# use ode solver with chosen method
+ode(
+  func=closed.seir.model,
+  y=xstart,
+  times=times,
+  parms=parms,
+  method = "rk4"
+) %>%
+  as.data.frame() -> out
+
+# plot graph
+out%>%
+  gather(variable,value,-time) %>%
+  ggplot(aes(x=time,y=value,color=variable))+
+  geom_line(size=2)+
+  theme_classic()+
+  labs(x='Time (in years)',y='Number of Individuals')
+
+# table of approximates
+out
+
+
+```
+
+```{r}
+
+## Plotting the exact cumulative cases and deaths:
+
+# import data
+data<-read.table(file='C:/Users/adam/Blakey Cloud/Documents/Education/University of Nottingham/PhD/G14UQN/P1 SEIR Model/G14UQN-Project1/data/Data_groupA.txt', header=TRUE)
+data
+
+# calculating cumulative data
+data[, 2] <- cumsum(data[, 2])
+data[, 3] <- cumsum(data[, 3])
+
+# plotting cases and deaths over time
+data%>%
+  gather(variable,value, -days) %>%
+  ggplot(aes(x=days,y=value,color=variable))+
+  geom_line(size=2)+
+  theme_classic()+
+  labs(x='Time (in days)',y='Number of Individuals')
+
+
+```

@@ -13,7 +13,7 @@ N       <- 2924
 initial <- c(S=N-1, E=0, I=1, R=0, C=0, D=0)
 
 # Initial guess at parameters.
-parameters <- c(sigma=0.25, beta=0.75, p=0.25, gamma=1/9)
+parameters <- c(sigma=0.25, beta=0.5, p=0.25, gamma=0.1)
 #parameters <- c(sigma=0.25, Opt_par2)
 
 # Time range.
@@ -82,13 +82,13 @@ D_mod_beta_upper <- solution_beta_upper[, "D"]
 
 # Plots data and solution from parameters.
 par(mfrow = c(1, 2))
-plot(t_data, C_data, xlab="t", ylab="C", log="", xlim=c(0, max(t)), ylim=c(0, max(C_mod)))
-points(t_data_test, C_data_test, col="red")
+plot(t_data, C_data, xlab="t", ylab="C", log="", xlim=c(0, max(t)), ylim=c(0, max(max(C_mod), max(C_data_test))))
+points(t_data_test, C_data_test, col="green")
 lines(t, C_mod, col="red")
 lines(t, C_mod_beta_lower, col="blue")
 lines(t, C_mod_beta_upper, col="blue")
-plot(t_data, D_data, xlab="t", ylab="D", log="", xlim=c(0, max(t)), ylim=c(0, max(D_mod)))
-points(t_data_test, D_data_test, col="red")
+plot(t_data, D_data, xlab="t", ylab="D", log="", xlim=c(0, max(t)), ylim=c(0, max(max(D_mod), max(D_data_test))))
+points(t_data_test, D_data_test, col="green")
 lines(t, D_mod, col="red")
 lines(t, D_mod_beta_lower, col="blue")
 lines(t, D_mod_beta_upper, col="blue")

@@ -2,7 +2,7 @@ S <- function(t, y, parameters)
 {
   with(as.list(c(y, parameters)),
   {
-    N  <- S+E+I+R
+    N  <- S+E+I+R+D
     dS <- -beta*S*I/N
     
     return(list(dS))
@@ -13,7 +13,7 @@ E <- function(t, y, parameters)
 {
   with(as.list(c(y, parameters)),
   {
-    N  <- S+E+I+R
+    N  <- S+E+I+R+D
     dE <- beta*S*I/N - sigma*E
     
     return(list(dE))
@@ -64,7 +64,7 @@ SEIRCD <- function(t, y, parameters)
 {
   with(as.list(c(y, parameters)),
   {
-    N  <- S+E+I+R
+    N  <- S+E+I+R+D
     
     dS <- S(t, y, parameters)[[1]]
     dE <- E(t, y, parameters)[[1]]

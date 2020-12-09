@@ -1,0 +1,40 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+# Differentiating R0 wrt beta and gamma to use in delta method:
+R0=expression(beta/gamma)
+D1 <- D(R0, 'beta')
+D2 <- D(R0, 'gamma')
+
+# Insert estimates and variances:
+Beta <- 0.46129314
+Gamma <- 0.07520636
+
+estimates <- 
+Var_beta <- 
+Var_gamma <- 
+Covar <- 
+
+D1 <- 1/gamma
+D2 <- -(beta/gamma^2)
+  
+#Standard Error using Delta Method:
+Var_R0 <- ((D1^2)*Var_beta)+((D2^2)*Var_gamma)+(2*D1*D2*Covar)
+SE_R0 <- sqrt(Var_R0)
+
+#Finding CI using Delta Method:
+R0 <- beta/gamma
+upper <- R0+qnorm(0.975)*SE_R0
+lower <- R0-qnorm(0.975)*SE_R0
+confidence_intervals <- as.data.frame(lower)
+confidence_intervals$upper <- upper 
+
+```
